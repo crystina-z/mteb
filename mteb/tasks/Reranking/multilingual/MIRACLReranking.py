@@ -188,7 +188,11 @@ class MIRACLRerankingEvaluator(RerankingEvaluator):
         ndcg, _map, recall, precision = RetrievalEvaluator.evaluate(
             qrels=qrels, results=results, k_values=self.k_values
         )
-        return {**ndcg, **_map, **recall, **precision}
+        metrics = {**ndcg, **_map, **recall, **precision}
+        miracl_metrics = {
+            f"{metric} (MIRACL)": metrics[metric] for metric in metrics
+        }
+        return miracl_metrics
 
     def compute_metrics_individual(self, model):
         """Embeds every (query, positive, negative) tuple individually.
